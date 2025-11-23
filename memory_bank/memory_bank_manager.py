@@ -44,7 +44,7 @@ class MemoryBankManager:
         dir_paths = {}
         for path_name in self.weight_intervals:
             path = self.memory_bank_path / '~'.join([str(value) for value in path_name])
-            path.mkdir(exist_ok=True)
+            path.mkdir(parents=True, exist_ok=True)
             dir_paths[str(path_name)] = path
         
         path = self.memory_bank_path / str(self.spical_weight)

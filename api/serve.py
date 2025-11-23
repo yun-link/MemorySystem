@@ -49,7 +49,13 @@ def search_memories(resquest_body: bodys.SearchMemory):
                 search_deep=resquest_body.search_deep,
                 association_deep=resquest_body.association_deep
         )
-        return bodys.SearchMemoryResponse(results)
+        for key in results:
+            for item in results[key]:
+                item['memory'] = item['memory'].to_dict()
+                if item['related_memories']:
+                    item['related_memories'] = [m.to_dict() for m in item['related_memories']]
+
+        return bodys.SearchMemoryResponse(results = results)
     except Exception as e:
         return HTTPException(500, f"搜索时发生错误：{e}")
     

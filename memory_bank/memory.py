@@ -168,6 +168,15 @@ class Memory:
     vector_content = {self.vector_content},
     memory_id = {self.memory_id},
 )"""
+    
+    def to_dict(self):
+        return {
+            "weight": self.weight,
+            "content": self.content.to_dict(),
+            "related_memories": self.related_memories,
+            "memory_id": self.memory_id
+        }
+
     def __repr__(self):
         return self.__str__()
 

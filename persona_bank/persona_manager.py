@@ -12,6 +12,9 @@ class PersonaManager:
         personas_path: str|Path = PERSONAS_PATH,
     ):
         self.personas_path = personas_path
+        if not self.personas_path.exists():
+            with open(self.personas_path, 'w', encoding='utf-8') as f:
+                f.write(r'{}')
         self.personas_data_dict = self._load_personas_data_dict()
         self.personas_data = self._load_personas_data()
         
