@@ -1,9 +1,9 @@
-from typing import Dict, List
+from typing import Dict, List, Literal
 from pydantic import BaseModel
 
 class AddMemory(BaseModel):
     weight: float
-    conversations: List
+    conversations: List[Dict[Literal["role", "content", "timestamp"], str]]
     related_memories: List
 
 class AddMemoryResponse(BaseModel):
@@ -19,15 +19,28 @@ class SearchMemory(BaseModel):
 class SearchMemoryResponse(BaseModel):
     results: Dict
 
+class UpdateMemoryBank(BaseModel):
+    decay_rate: float = 0.01
+
+class UpdateMemoryBankResponse(BaseModel):
+    pass
+
 class GetPersona(BaseModel):
     name: str
 
 class GetPersonaResponse(BaseModel):
-    result: Dict
+    result: Dict 
 
-class UpadatePersona(BaseModel):
-    persona: Dict
+class UpadatePersonas(BaseModel):
+    personas: Dict | List[Dict]
 
 class UpadatePersonaResponse(BaseModel):
     pass
+
+class GeneratePersonas(BaseModel):
+    content : str
+
+class GeneratePersonasResponse(BaseModel):
+    pass
+
 

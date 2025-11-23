@@ -52,4 +52,4 @@ name : {{
 # 输出要求
 输出**标准JSON对象**，直接输出JSON内容，**不要使用**Markdown，包含所有相关人物的更新后画像，保持与输入完全相同的格式结构。"""
 
-GENERATE_PERSONA_MODEL_NAME = "deepseek-r1-250528"
+GENERATE_PERSONA_MODEL_NAME = "doubao-seed-1-6-251015"

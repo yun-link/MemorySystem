@@ -12,7 +12,7 @@ from difflib import SequenceMatcher
 
 from .memory import Memory, MemoryContent
 from .memory_bank_config import MEMORY_BANK_PATH
-from ..llm import encode
+from llm import encode
 
 class MemoryBankManager:
     def __init__(
@@ -84,7 +84,7 @@ class MemoryBankManager:
                 path = self.dir_paths[str(self.spical_weight)]
                 self.memorie_ids_index[self.spical_weight][memory.memory_id] = path / f"{memory.memory_id}.mem"
             else:    
-                index = self.find_interval(memory.weight)
+                index = self._find_interval(memory.weight)
                 if index is None:
                     raise ValueError(f"记忆权重值超出范围：{memory.weight}")
                 path = self.dir_paths[str(self.weight_intervals[index])]
@@ -106,6 +106,24 @@ class MemoryBankManager:
             related_memories.append(self.get_related_memories(_related_memories, deep-1))
 
         return related_memories
+    def _delete_memories(self, memories: List[Memory]):
+        for memory in memories:
+            for interval in self.memorie_ids_index:
+                if memory.memory_id in self.memorie_ids_index[interval]:
+                    path = self.memorie_ids_index[interval][memory.memory_id]
+                    if path.exists():
+                        path.unlink()
+                    del self.memorie_ids_index[interval][memory.memory_id]
+                    break
+
+    def set_memory_weights(self, targets: List[tuple]):
+        memories_to_delete = [target[0] for target in targets]
+        self._delete_memories(memories_to_delete)
+        updated_memories = []
+        for memory, new_weight in targets:
+            memory.weight = new_weight
+            updated_memories.append(memory)
+        self.add_memories(updated_memories)
 
     def search_memories(
         self,
@@ -123,6 +141,7 @@ class MemoryBankManager:
                     key=lambda x: (float('inf') if x == -1 else x))):
                 memory_ids = list(self.memorie_ids_index[weight])
                 memories = self.from_ids_load_memory(memory_ids)
+                
                 for memory in memories:
                     memory_content = str(memory.content)
                     related_memories = self.get_related_memories([memory], association_deep)
@@ -135,6 +154,7 @@ class MemoryBankManager:
                     combined_score = (semantic_similarity + char_match_score) 
                     
                     if combined_score >= top_p:
+                        self.set_memory_weights([(memory, memory.weight + 0.03)])
                         results.append(
                             {
                                 "memory": memory, 
@@ -149,6 +169,21 @@ class MemoryBankManager:
             if results:
                 result[query] = results[:top_k]
         return result
+
+
+    def update_memory_bank(self, decay_rate: float = 0.01):
+        update_targets = []
+        for interval in self.memorie_ids_index:
+            if interval == str(self.spical_weight):
+                continue
+            memory_ids = list(self.memorie_ids_index[interval].keys())
+            memories = self.from_ids_load_memory(memory_ids)
+            for memory in memories:
+                new_weight = memory.weight * (1 - decay_rate)
+                update_targets.append((memory, new_weight))
+        if update_targets:
+            self.set_memory_weights(update_targets)
+
 
 if __name__ == "__main__":
     memory_manager = MemoryBankManager()

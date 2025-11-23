@@ -15,8 +15,8 @@ import numpy as np
 import torch
 
 from .memory_bank_config import MEMORY_BANK_PATH, SUMMARY_MODEL, SUMMARY_PROMPT
-from ..llm import encode
-from ..llm import call_model
+from llm import encode
+from llm import call_model
 
 class MemoryContent:
     def __init__(
