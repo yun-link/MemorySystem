@@ -50,13 +50,19 @@ def test_get_persona():
 
 def test_update_persona():
     persona_data = {
-        "personas": {
-            "name": "test_persona",
-            "personality": {
-                "traits": ["friendly", "helpful"],
-                "style": "casual"
-            }
-        }
+        "name": "test_persona",
+        "gender": "unkonwn",
+        "age": "unkonwn",
+        "profile": "unkonwn",
+        "personality": {
+                "mbti": "unkonwn",
+                "openness": "unkonwn",
+                "conscientiousness": "unkonwn",
+                "extraversion": "unkonwn",
+                "agreeableness": "unkonwn",
+                'neuroticism': "unkonwn"
+            },
+        "likeability": "unkonwn"
     }
     response = requests.post(f"{BASE_URL}/persona_bank/update_persona", json=persona_data)
     print(f"Update Persona: {response.status_code}")
