@@ -50,12 +50,20 @@ def test_get_persona():
 
 def test_update_persona():
     persona_data = {
-        "personas": {
+        "personas" :{
             "name": "test_persona",
+            "gender": "unkonwn",
+            "age": "unkonwn",
+            "profile": "unkonwn",
             "personality": {
-                "traits": ["friendly", "helpful"],
-                "style": "casual"
-            }
+                    "mbti": "unkonwn",
+                    "openness": "unkonwn",
+                    "conscientiousness": "unkonwn",
+                    "extraversion": "unkonwn",
+                    "agreeableness": "unkonwn",
+                    'neuroticism': "unkonwn"
+                },
+            "likeability": "unkonwn"
         }
     }
     response = requests.post(f"{BASE_URL}/persona_bank/update_persona", json=persona_data)
@@ -63,7 +71,7 @@ def test_update_persona():
 
 def test_generate_persona():
     generate_data = {
-        "content": "Create a friendly assistant persona"
+        "content": "小明：你知道我是谁吗？"
     }
     response = requests.post(f"{BASE_URL}/persona_bank/generate_persona", json=generate_data)
     print(f"Generate Persona: {response.status_code}")

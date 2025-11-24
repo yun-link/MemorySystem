@@ -173,6 +173,7 @@ class MemoryBankManager:
 
     def update_memory_bank(self, decay_rate: float = 0.01):
         update_targets = []
+        delete_targets = []
         for interval in self.memorie_ids_index:
             if interval == str(self.spical_weight):
                 continue
@@ -180,9 +181,14 @@ class MemoryBankManager:
             memories = self.from_ids_load_memory(memory_ids)
             for memory in memories:
                 new_weight = memory.weight * (1 - decay_rate)
-                update_targets.append((memory, new_weight))
+                if new_weight >= 0.1:
+                    update_targets.append((memory, new_weight))
+                else:
+                    delete_targets.append(memory)
         if update_targets:
             self.set_memory_weights(update_targets)
+        if delete_targets:
+            self._delete_memories(delete_targets)
 
 
 if __name__ == "__main__":
